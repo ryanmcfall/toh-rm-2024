@@ -21,5 +21,22 @@ jobs:
               if: success()
               uses: actions/upload-artifact@v4
               with:
-                  name: deploy_dist
-                  path: dist
+                name: deploy_dist
+                path: dist
+    deploy:
+        name: Deploy to gh-pages branch
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: Download build
+              uses: actions/download-artifact@v4
+              with:
+                name: deploy_dist
+            - name: Deploy to GitHub Pages
+            uses: James/Ives/github-pages-deploy-action@releases/v3
+            with:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                BRANCH: gh-pages
+                FOLDER: deploy_dist
